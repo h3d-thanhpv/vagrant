@@ -1,0 +1,18 @@
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.synced_folder "F:/GitRepo", "/projectkit"
+  config.vm.hostname = "xenial-server"
+  config.vm.network "private_network", ip: "172.20.20.21"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = 4096
+    vb.cpus = 1
+  end
+  config.vm.provision "shell", inline: <<-SHELL
+     sudo apt-get update
+     sudo apt-get install -y whois git
+     sudo useradd -m -p `mkpasswd password` -s /bin/bash dev
+     sudo usermod -a -G sudo dev
+  SHELL
+end
